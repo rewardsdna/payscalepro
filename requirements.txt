@@ -1,0 +1,10 @@
+pandas
+openpyxl
+scipy
+datetime
+plotly
+tinydb
+sqlite3
+pyrebase
+pkg_resources
+dotenv
