@@ -4,4 +4,4 @@ scipy
 datetime
 plotly
 pyrebase
-dotenv
+python-dotenv
