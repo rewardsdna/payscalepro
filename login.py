@@ -264,7 +264,7 @@ if not st.session_state.is_logged_in:
             st.button("Sign Up", on_click=lambda: navigate_to("Sign Up"))
 
         # Forgot Password button
-        if st.button("Forgot Password"):
+        if st.session_state.page not in ["Forgot Password", "Sign Up"] and st.button("Forgot Password"):
             st.session_state.page = "Forgot Password"
             st.rerun()
 
