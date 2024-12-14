@@ -158,25 +158,108 @@ def navigate_to(page):
     st.session_state.page = page
 
 if not st.session_state.is_logged_in:
-    st.title("PayScale Pro")
+    st.title("🏁PayScale Pro")
+# Define the layout using st.columns
+    col1, col2, col3 = st.columns([0.5, 0.15, 0.35])
+    with col1:
+        # App description and call to action
+        import streamlit as st
 
-    if st.session_state.page == "Sign In":
-        st.subheader("Sign In")
-        email = st.text_input("Email address", key="signin_email")
-        password = st.text_input("Password", type="password", key="signin_password")
-        if st.button("Sign In"):
-            if not email or not password:
-                st.error("Email and password cannot be empty.")
-            else:
-                try:
-                    auth.sign_in_with_email_and_password(email, password)
-                    st.session_state.is_logged_in = True
-                    st.success("Logged in successfully!")
-                    st.session_state.page = "home"
-                    st.rerun()
-                except Exception as e:
-                    st.error(f"Please Enter Valid Details if you are a new user please signup")
-        st.button("Sign Up", on_click=lambda: navigate_to("Sign Up"))
+        # CSS styling for the box
+        st.markdown(
+            """
+            <style>
+            .info-box {
+                background-color: #f9f9f9;
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+                padding: 20px;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                margin: 20px 0;
+            }
+            .info-box h2 {
+                color: #2C3E50;
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+            .info-box ul {
+                list-style-type: none;
+                padding: 0;
+            }
+            .info-box li {
+                font-size: 16px;
+                margin-bottom: 8px;
+                color: #34495E;
+            }
+            .info-box li span {
+                font-weight: bold;
+                color: #1ABC9C;
+            }
+            .info-box p {
+                font-size: 14px;
+                margin-top: 20px;
+                color: #7F8C8D;
+    }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+
+
+    # Add custom CSS for buttons
+        st.markdown("""
+            <style>
+            .stButton > button {
+                width: 100%;
+                border-radius: 5px;
+                height: 3em;
+            }
+                    
+            .stButton > button:hover {
+                background-color: #4A90E2;  /* Color when hovered */
+                cursor: pointer;  /* Cursor changes to pointer on hover */
+                color: white;  /* Text color changes to white on hover */
+            }        
+            </style>
+            """, unsafe_allow_html=True)
+
+        # HTML content for the box
+        st.markdown(
+            """
+            <div class="info-box">
+                <h2>Ready to Make Fair Pay a Reality?</h2>
+                <ul>
+                    <li><span>Build and Optimize Pay Ranges:</span> Design aligned pay ranges quickly, with or without market data.</li>
+                    <li><span>Tailored Strategies:</span> Solve diverse business challenges with flexible compensation solutions.</li>
+                    <li><span>Powerful Insights:</span> Access 40+ Gender Pay Gap and Compensation metrics at your fingertips.</li>
+                    <li><span>Equity at a Glance:</span> Assess employee placement within pay ranges for fair, data-driven decisions.</li>
+                    <li><span>Easy to Navigate:</span> Requires minimal data and no specialized knowledge to get started.</li>
+                </ul>
+                <p>Explore Job Architecture with Job Profiler – Includes JD Manager and Job Leveling System.<br>
+                📧 Write to <a href="mailto:hello@rewardsdna.com">hello@rewardsdna.com</a> today and get free access!</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    with col3:
+        if st.session_state.page == "Sign In":
+            st.subheader("Sign In")
+            email = st.text_input("Email address", key="signin_email")
+            password = st.text_input("Password", type="password", key="signin_password")
+            if st.button("Sign In"):
+                if not email or not password:
+                    st.error("Email and password cannot be empty.")
+                else:
+                    try:
+                        auth.sign_in_with_email_and_password(email, password)
+                        st.session_state.is_logged_in = True
+                        st.success("Logged in successfully!")
+                        st.session_state.page = "home"
+                        st.rerun()
+                    except Exception as e:
+                        st.error(f"Please Enter Valid Details if you are a new user please signup")
+            st.button("Sign Up", on_click=lambda: navigate_to("Sign Up"))
 
         # Forgot Password button
         if st.button("Forgot Password"):
@@ -186,44 +269,44 @@ if not st.session_state.is_logged_in:
         
 
 
-    elif st.session_state.page == "Sign Up":
-        st.subheader("Sign Up")
-        name = st.text_input("Name")
-        email = st.text_input("Email address", key="signup_email")
-        password = st.text_input("Password", type="password", key="signup_password")
-        confirm_password = st.text_input("Confirm Password", type="password", key="signup_confirm_password")
-        selected_country = st.selectbox("Country", countries)
-        if st.button("Sign Up"):
-            if not name or not email or not password or not confirm_password:
-                st.error("Please fill in all fields.")
-            elif password != confirm_password:
-                st.error("Passwords do not match.")
-            else:
-                validation_message = validate_password(password)
-                if validation_message:
-                    st.error(validation_message)
+        elif st.session_state.page == "Sign Up": 
+            st.subheader("Sign Up")
+            name = st.text_input("Name")
+            email = st.text_input("Email address", key="signup_email")
+            password = st.text_input("Password", type="password", key="signup_password")
+            confirm_password = st.text_input("Confirm Password", type="password", key="signup_confirm_password")
+            selected_country = st.selectbox("Country", countries)
+            if st.button("Sign Up"):
+                if not name or not email or not password or not confirm_password:
+                    st.error("Please fill in all fields.")
+                elif password != confirm_password:
+                    st.error("Passwords do not match.")
                 else:
-                    try:
-                        auth.create_user_with_email_and_password(email, password)
-                        save_to_excel(name, email, selected_country)
-                        send_welcome_email(name, email)
-                        st.success(f"Account created successfully for {name}!")
-                        navigate_to("Sign In")
-                    except Exception as e:
-                        st.error(f"Sign up error: {e}")
-        st.button("Go to Sign In", on_click=lambda: navigate_to("Sign In"))
+                    validation_message = validate_password(password)
+                    if validation_message:
+                        st.error(validation_message)
+                    else:
+                        try:
+                            auth.create_user_with_email_and_password(email, password)
+                            save_to_excel(name, email, selected_country)
+                            send_welcome_email(name, email)
+                            st.success(f"Account created successfully for {name}!")
+                            navigate_to("Sign In")
+                        except Exception as e:
+                            st.error(f"Sign up error: {e}")
+            st.button("Go to Sign In", on_click=lambda: navigate_to("Sign In"))
 
-    elif st.session_state.page == "Forgot Password":
-        st.subheader("Forgot Password")
-        email = st.text_input("Enter your email address", key="forgot_email")
-        if st.button("Reset Password"):
-            if email:
-                send_reset_link(email)
-                             
-            else:
-                
-                st.error("Please enter your email address.")
-        st.button("Go to Sign In", on_click=lambda: navigate_to("Sign In"))
+        elif st.session_state.page == "Forgot Password":
+            st.subheader("Forgot Password")
+            email = st.text_input("Enter your email address", key="forgot_email")
+            if st.button("Reset Password"):
+                if email:
+                    send_reset_link(email)
+                                
+                else:
+                    
+                    st.error("Please enter your email address.")
+            st.button("Go to Sign In", on_click=lambda: navigate_to("Sign In"))
 else:
     if st.session_state.page == "home":
         main()

@@ -41,6 +41,23 @@ def perform_calculation(selected_option, df):
         return pd.DataFrame()
 
 def show():
+    # Add custom CSS for buttons
+    st.markdown("""
+            <style>
+            .stButton > button {
+                width: 100%;
+                border-radius: 5px;
+                height: 3em;
+            }
+                    
+            .stButton > button:hover {
+                background-color: #4A90E2;  /* Color when hovered */
+                cursor: pointer;  /* Cursor changes to pointer on hover */
+                color: white;  /* Text color changes to white on hover */
+            }        
+            </style>
+            """, unsafe_allow_html=True)
+
     """Main logic for displaying and processing data."""
     st.markdown("<h2 style='color: #4A90E2;'>Pay Ranges</h2>", unsafe_allow_html=True)
 
@@ -119,7 +136,11 @@ def show():
             st.stop()  # Stop execution if data couldn't be loaded
             initialize_session_state(df)
    
-   
+    st.write("")  
+    st.write("")   
+
+
+
     # Navigation buttons
     col1, col2, col3, col4, col5 = st.columns(5)
     with col5:
@@ -137,15 +158,15 @@ def show():
             st.session_state.page = 'page4'  # Navigate to the next page
             st.rerun()  # Rerun the app to load the next page with fresh data
 
-    
+
     with col4:
         if st.button("← Previous"):
             st.session_state.page = 'page2'
             st.rerun()
 
+
 def main():
     show()
-
 
 if __name__ == "__main__":
     main()

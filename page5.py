@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
+import time
 from datetime import datetime
 from calculations import market_rates_calculations
 from charts import employee_pay_chart_pay_range_final
@@ -60,7 +61,34 @@ def show():
   st.markdown("""
       <h2 style='color: #4A90E2;'>Age Your Pay Ranges</h2>
       """, unsafe_allow_html=True)
-
+# Add custom CSS for buttons
+  st.markdown("""
+            <style>
+            .stButton > button {
+                width: 100%;
+                border-radius: 5px;
+                height: 3em;
+            }
+                    
+            .stButton > button:hover {
+                background-color: #4A90E2;  /* Color when hovered */
+                cursor: pointer;  /* Cursor changes to pointer on hover */
+                color: white;  /* Text color changes to white on hover */
+            }        
+            </style>
+            """, unsafe_allow_html=True)
+  # Bringing the buttons Age & Reset button for horizontal alignment
+  st.markdown(
+        """
+        <style>
+        .stButton>button {
+            margin-top: 22px; /* Bringing buttons down */
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    
   # Initialize data
   df_original = initialize_data()
 
@@ -127,6 +155,8 @@ def show():
           st.session_state['age_applied'] = True
           st.session_state['working_data'] = df_aged  # Update session state with aged data
           st.success("Pay ranges have been aged.")
+          # Add a 1-second delay
+          time.sleep(1)
           st.rerun()  # Rerun the app to update the UI
 
       if st.session_state['age_applied'] and reset_button:
@@ -134,6 +164,9 @@ def show():
           df_original.to_csv('data_csv/pay_range_final.csv', index=False)
           st.session_state['age_applied'] = False
           st.session_state['working_data'] = df_original  # Reset session state to original data
+          st.success("Removed ageing!")
+          # Add a 1-second delay
+          time.sleep(1)
           st.rerun()  # Rerun the app to update the UI
 
   # Reset all aging if "No - I'm fine" is selected
@@ -145,7 +178,8 @@ def show():
           if key in st.session_state:
               del st.session_state[key]
       st.session_state['working_data'] = df_original.copy()  # Reinitialize working data
-      st.success("Aging has been reset to original values.")
+      # Add a 1-second delay
+      st.success("Restored pay original pay ranges.")
       # Do not rerun here to ensure the page components are reloaded correctly
 
   # Display the DataFrame using Streamlit's native display

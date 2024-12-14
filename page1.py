@@ -25,16 +25,23 @@ def show():
     # Initialize page state
     init_page1_state()
 
+    
     # Add custom CSS for buttons
     st.markdown("""
-    <style>
-    .stButton > button {
-        width: 100%;
-        border-radius: 5px;
-        height: 3em;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+            <style>
+            .stButton > button {
+                width: 100%;
+                border-radius: 5px;
+                height: 3em;
+            }
+                    
+            .stButton > button:hover {
+                background-color: #4A90E2;  /* Color when hovered */
+                cursor: pointer;  /* Cursor changes to pointer on hover */
+                color: white;  /* Text color changes to white on hover */
+            }        
+            </style>
+            """, unsafe_allow_html=True)
 
     st.markdown("""
         <h2 style='color: #4A90E2;'>What's your approach?</h2>
@@ -83,9 +90,8 @@ def show():
         Combines external market data with internal pay data to create balanced pay ranges that are both competitive and internally fair.
         """)
 
-    # Show message based on selection
     if selected_option:
-        st.write(options[selected_option])
+        st.success(options[selected_option])
 
     # Navigation buttons with better layout
     col1, col2, col3, col4, col5 = st.columns(5)
@@ -99,7 +105,7 @@ def show():
         # Next button is disabled until an option is selected
         if st.button("Next →", 
                     disabled=not st.session_state.page1_completed,
-                    key="next_button"):
+                    key="next_button_from_page_1_to_2"):
             # Ensure selection is saved before moving to next page
             if st.session_state.selected_approach:
                 save_selection_to_csv(st.session_state.selected_approach)
@@ -107,6 +113,7 @@ def show():
             st.rerun()
 
     # Add spacing at the bottom
+    st.write("")
     st.write("")
     
 

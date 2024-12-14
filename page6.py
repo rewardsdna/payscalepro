@@ -13,6 +13,23 @@ def show():
         <h2 style='color: #4A90E2;'>💹Comp Dashboard</h2>
     """, unsafe_allow_html=True)
 
+    # Add custom CSS for buttons
+    st.markdown("""
+            <style>
+            .stButton > button {
+                width: 100%;
+                border-radius: 5px;
+                height: 3em;
+            }
+                    
+            .stButton > button:hover {
+                background-color: #4A90E2;  /* Color when hovered */
+                cursor: pointer;  /* Cursor changes to pointer on hover */
+                color: white;  /* Text color changes to white on hover */
+            }        
+            </style>
+            """, unsafe_allow_html=True)
+
     # Define file paths
     pay_range_file = "data_csv/pay_range_final.csv"
     user_data_file = "data_csv/user_loaded_data.csv"
@@ -33,8 +50,8 @@ def show():
         return
 
     # Display Overview section
-    with st.expander("Pay Range Overview"):
-        st.write("Get a high level view of pay range")
+    with st.expander("Pay Range Overview", expanded=True):
+        st.write("Get a high level view of pay ranges")
         #st.subheader("High-Level Metrics")
         try:
             cols = st.columns(5)
@@ -51,7 +68,7 @@ def show():
             st.error(f"Employee Pay Range Distribution is not available for the selected approach: {e}")
 
     # Charts section
-    with st.expander("Pay Structure Visualization"):
+    with st.expander("Pay Structure Visualization", expanded=True):
         st.write("See pay range progression")
         try:
             fig = market_rates_calculations.create_salary_structure_bar_chart(working_data)
@@ -83,7 +100,7 @@ def show():
             # Pay Distribution Overview metrics
             cols = st.columns(5)
             cols[0].metric(label="Head Count", value=f"{int(results_2_3.get('employee_count', 0)):,}")
-            cols[1].metric(label="Within Range", value=f"{int(results_2_3.get("green_circled", 0)):,}")   
+            cols[1].metric(label="Within Range", value=f"{int(results_2_3.get('green_circled', 0)):,}")   
             cols[2].metric(label="Within Range %", value=f"{float(results_2_3.get('within_range_pct', 0)) * 100:.0f}%")
             cols[4].metric(label="Outliers %", value=f"{float(results_2_3.get('outliers_pct', 0)) * 100:.0f}%")
             cols[3].metric(label="Outliers", value=f"{int(results_2_3.get('outliers', 0)):,}")
@@ -214,7 +231,6 @@ def show():
 
     st.write("")
     st.write("")
-    st.write("")
     
     # Download - Formatted final_pay_ranges.csv
     col1, col2, col3, col4, col5 = st.columns(5)
@@ -262,10 +278,8 @@ def show():
     # Display success message if the download button was clicked
     if st.session_state['download_clicked']:
                 st.success("✅ You've nailed it! Your new pay ranges are now ready to be implemented.")
-    st.write("")
-    st.write("")
-
-        # Navigation buttons
+    
+   # Navigation buttons
     col1, col2, col3, col4 = st.columns(4)
     with col2:
             if st.button("← Previous", key="page6_previous_button"):
@@ -276,12 +290,29 @@ def show():
                 st.session_state.page = 'home'
                 st.rerun()
 
+    st.write("")
+    st.write("")
     st.markdown(
-            '<span style="font-size: 0.8em; font-weight: lighter;"> Facing challenges with compensation or HR? Visit RewardsDNA.com to explore intuitive tools, request new features, or just drop us a message at hello@RewardsDNA.com!</span>',
-            unsafe_allow_html=True)
+    """
+    
+    <hr style="
+        border: none; 
+        border-top: 1px solid lightgray; 
+        margin: 10px 0;"
+    >
+    <div style="
+        text-align: center;
+        font-size: 0.8em;
+        font-weight: lighter;
+        color: #4ca1ff;
+    ">
+        Facing challenges with compensation or HR? Visit RewardsDNA.com to explore intuitive tools, request new features, or just drop us a message at hello@RewardsDNA.com!
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-
-st.write(st.session_state)
+# st.write(st.session_state)
     
 
 

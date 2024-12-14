@@ -17,19 +17,6 @@ from pathlib import Path
     # if 'data' not in st.session_state:
     #     st.session_state.data = None
 
-# Custom CSS
-st.markdown("""
-<style>
-.stButton > button {
-    width: 200px;
-    height: 50px;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-}
-</style>
-""", unsafe_allow_html=True)
-
 def navigate_to(page_name):
     st.session_state.page = page_name
     st.rerun()
@@ -53,6 +40,26 @@ def main():
         st.markdown("""
             <h2 style='color: #4A90E2;'>Struggling with fair and competitive pay?</h2>
             """, unsafe_allow_html=True)
+        
+        
+# Add custom CSS for buttons
+        st.markdown("""
+            <style>
+            .stButton > button {
+                width: 100%;
+                border-radius: 5px;
+                height: 3em;
+            }
+                    
+            .stButton > button:hover {
+                background-color: #4A90E2;  /* Color when hovered */
+                cursor: pointer;  /* Cursor changes to pointer on hover */
+                color: white;  /* Text color changes to white on hover */
+            }        
+            </style>
+            """, unsafe_allow_html=True)
+        
+        
 
         st.write("The pay range builder empowers you to build data driven pay range, ensuring you attract top talent, retain your best, and manage compensation with confidence.")
 
@@ -69,7 +76,7 @@ def main():
         st.write("")
         st.write("")
 
-        col1, col2, col3, col4, col5= st.columns([1, 1, 1, 1, 1])
+        col1, col2, col3, col4, col5= st.columns([1, 1, 2, 1, 1])
         with col3:
             if st.button("I'm in →"):
                 navigate_to('page1')
@@ -105,7 +112,7 @@ def main():
         text-align: center;
         font-size: 0.8em;
         font-weight: lighter;
-        color: lightblue;
+        color: #4ca1ff;
     ">
         Job Profiler, Comp360, Edge, and Nudge are compensation informations for the rest of us. 
         Visit RewardsDNA.com today for your free access!

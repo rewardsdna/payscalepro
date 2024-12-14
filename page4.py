@@ -189,28 +189,60 @@ def reset_all_changes():
 
 # Main function to display the page
 def show():
+
+    # Add custom CSS for buttons
+    st.markdown("""
+            <style>
+            .stButton > button {
+                width: 100%;
+                border-radius: 5px;
+                height: 3em;
+            }
+                    
+            .stButton > button:hover {
+                background-color: #4A90E2;  /* Color when hovered */
+                cursor: pointer;  /* Cursor changes to pointer on hover */
+                color: white;  /* Text color changes to white on hover */
+            }        
+            </style>
+            """, unsafe_allow_html=True)
+
     """Main function to display the page for calibrating pay ranges."""
     # Ensure session state is initialized
     initialize_session_state()
 
     # Title
     st.markdown("<h2 style='color: #4A90E2;'>Calibrate Pay Ranges</h2>", unsafe_allow_html=True)
-
+    
+    # Bringing the buttons down to align with input boxes
+    st.markdown(
+        """
+        <style>
+        .stButton>button {
+            margin-top: 22px; /* Bringing buttons down */
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
     # Layout for radio buttons and buttons - placed at the top
-    button_row = st.columns([1, 1, 1, 1, 1, 1])
+    button_row = st.columns([2, 1, 1, 1, 1, 1])
+       # Define the columns for layout
+    col1, col2, col3, col4 ,col5, col6= st.columns([1, 1, 1, 1, 1, 1])
 
     # Radio Button for parameter selection (at the top)
-    with button_row[0]:
+    with col1:
         parameter = st.radio(
             "Select Parameter to Modify:",
             ["Range Mid", "Range Spread"],
             horizontal=False
         )
 
+    
     # Select Grade (at the top)
     grade_options = st.session_state.working_data['Grade'].unique()
-    with button_row[0]:
+    with col2:
         grade = st.selectbox("Select Grade", grade_options)
 
     # Get current value for the selected grade and parameter
@@ -218,7 +250,7 @@ def show():
     current_value = grade_data[parameter].iloc[0] if not grade_data.empty else 0.0
 
     # Input for new value of the selected parameter
-    with button_row[1]:
+    with col3:
         if parameter == "Range Mid":
             new_value = st.number_input(
                 f"New {parameter}",
@@ -235,7 +267,7 @@ def show():
             )
 
     # Buttons for update, reset, and reset all changes
-    with button_row[2]:
+    with col4:
         if st.button("Update", use_container_width=True, key="update_button"):
             current_index = st.session_state.working_data[st.session_state.working_data['Grade'] == grade].index[0]
             old_value = st.session_state.working_data.loc[current_index, parameter]
@@ -268,7 +300,7 @@ def show():
     else:
         edit_log_count = 0        
 
-    with button_row[4]:
+    with col6:
       if edit_log_count >= 2: # Reset all button should be visible only from the second updates 
         if st.button("Reset All", use_container_width=True):
             # Use reset_all_changes() and update session state
@@ -276,10 +308,12 @@ def show():
             if reset_data is not None:
                 st.session_state.working_data = reset_data
                 # st.success("All changes have been reset to original values.")
+                # Add a 1-second delay
+                time.sleep(1)
                 st.rerun()
 
     # Reset Last Change
-    with button_row[3]:
+    with col5:
       if edit_log_count >= 1: # Reset button should be visible after 1 update
         if st.button("Reset", use_container_width=True):
             st.session_state.working_data = reset_last_change(st.session_state.working_data)

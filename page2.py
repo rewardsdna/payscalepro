@@ -53,6 +53,23 @@ def validate_data(df, required_columns):
     return df, validation_errors
 
 def show():
+    # Add custom CSS for buttons
+    st.markdown("""
+            <style>
+            .stButton > button {
+                width: 100%;
+                border-radius: 5px;
+                height: 3em;
+            }
+                    
+            .stButton > button:hover {
+                background-color: #4A90E2;  /* Color when hovered */
+                cursor: pointer;  /* Cursor changes to pointer on hover */
+                color: white;  /* Text color changes to white on hover */
+            }        
+            </style>
+            """, unsafe_allow_html=True)
+
     # Title
     st.markdown("<h2 style='color: #4A90E2;'>Load your data</h2>", unsafe_allow_html=True)
 
@@ -83,27 +100,28 @@ def show():
             st.rerun()
         return
 
-    st.success(f"**Mandatory fields:** {', '.join(expected_columns[selected_option])}")
-
+    st.info(f"Mandatory fields: {', '.join(expected_columns[selected_option])}")
+    col1, col2 = st.columns(2)
     # Sample template for the selected option
     sample_data = {col: [f"Sample {col}"] for col in expected_columns[selected_option]}
-    sample_df = pd.DataFrame(sample_data)
-    st.write("**Sample template:**")
-    st.dataframe(sample_df, hide_index=True)
-
-    # Download template button
-    template_df = pd.DataFrame(columns=expected_columns[selected_option])
-    col1, col2 = st.columns([3, 1])
     with col1:
-        st.download_button(
-            label="📥 Template",
-            data=template_df.to_csv(index=False).encode('utf-8'),
-            file_name="template.csv",
-            mime="text/csv"
-        )
+        sample_df = pd.DataFrame(sample_data)
+        st.write("**Data format:**")
+        st.dataframe(sample_df, hide_index=True)
+
+        # Download template button
+    template_df = pd.DataFrame(columns=expected_columns[selected_option])
+    with col2:
+            st.write("**Sample Template:**")
+            st.download_button(
+                label="📥 Template",
+                data=template_df.to_csv(index=False).encode('utf-8'),
+                file_name="template.csv",
+                mime="text/csv"
+            )
 
     # File uploader for Excel files
-    uploaded_file = st.file_uploader("Choose an Excel file", type=["xlsx", "xls"])
+    uploaded_file = st.file_uploader("Choose an Excel or CSV file", type=["xlsx", "xls", "csv"])
 
     # Check if a file has been uploaded
     if uploaded_file is not None:
@@ -168,7 +186,7 @@ def show():
             if 'imported_data' in st.session_state:
                 del st.session_state['imported_data']
     else:
-        st.info("Upload a file to proceed.")
+        st.info("*Upload a file to proceed.*")
 
 
     st.write(" ")
@@ -176,19 +194,20 @@ def show():
     # Navigation buttons
     col1, col2, col3, col4, col5 = st.columns(5)
     with col4:
-        if st.button("← Previous"):
+        if st.button("← Previous",key="next_button_from_page_2_to_1"):
             st.session_state.page = 'page1'
             st.rerun()
 
     with col5:
         # Enable Next button only if data is uploaded and validated
         if st.button("Next →", 
-                    disabled='imported_data' not in st.session_state):
+                    disabled='imported_data' not in st.session_state, key="next_button_from_page_2_to_3"):
             st.session_state.page = 'page3'
             st.rerun()
 
 # Add spacing at the bottom
     st.write("")
+
 
 # # Debug information (comment out in production)
 # st.write("Debug Info:")
