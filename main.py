@@ -1,6 +1,4 @@
 import streamlit as st
-st.set_page_config(page_icon="🌟",
-    layout="wide")
 import page1, page2 
 from datetime import datetime
 import os
